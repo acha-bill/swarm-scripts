@@ -52,6 +52,7 @@ var durabilityFileCmd = &cobra.Command{
 var (
 	inputFile      string
 	postageBatchID string
+	parallelism    int
 )
 var durabilityChunksCmd = &cobra.Command{
 	Use:   "chunks",
@@ -83,7 +84,7 @@ var durabilityChunksCmd = &cobra.Command{
 		doneC := make(chan struct{})
 
 		go func() {
-			limit := make(chan struct{}, 100)
+			limit := make(chan struct{}, parallelism)
 			for {
 				select {
 				case <-ctx.Done():
@@ -122,7 +123,7 @@ var durabilityChunksCmd = &cobra.Command{
 		}()
 
 		go func() {
-			limit := make(chan struct{}, 100)
+			limit := make(chan struct{}, parallelism)
 			for {
 				select {
 				case <-ctx.Done():
@@ -194,6 +195,7 @@ var durabilityChunksCmd = &cobra.Command{
 func init() {
 	durabilityChunksCmd.Flags().StringVar(&inputFile, "input-file", "", "Input file(required)")
 	durabilityChunksCmd.Flags().StringVar(&postageBatchID, "batch-id", "", "Postage Batch ID")
+	durabilityChunksCmd.Flags().IntVar(&parallelism, "parallelism", 20, "Parallelism")
 	durabilityChunksCmd.MarkFlagRequired("input-file")
 
 	durabilityCmd.AddCommand(durabilityFileCmd)
