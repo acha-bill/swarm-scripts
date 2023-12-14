@@ -58,11 +58,7 @@ var durabilityChunksCmd = &cobra.Command{
 	Use:   "chunks",
 	Short: "Checks every chunk in the input file if it is retrievable",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 {
-			return fmt.Errorf("input file is required")
-		}
-
-		in, err := os.Open(args[0])
+		in, err := os.Open(inputFile)
 		if err != nil {
 			return err
 		}
