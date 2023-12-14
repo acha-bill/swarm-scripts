@@ -136,6 +136,11 @@ var durabilityChunksCmd = &cobra.Command{
 							return
 						}
 						defer resp.Body.Close()
+						if resp.StatusCode != http.StatusOK {
+							errC <- fmt.Errorf("stewardship get: ref=%s, status=%d", ref, resp.StatusCode)
+							return
+						}
+
 						var stewardship StewardshipRes
 						d, err := io.ReadAll(resp.Body)
 						if err != nil {
@@ -178,7 +183,7 @@ var durabilityChunksCmd = &cobra.Command{
 
 		start := time.Now()
 		for i, ref := range refs {
-			log.Printf("i=%d of %d - ref=%s\n", i, len(refs), ref)
+			log.Printf("%.2f%% ref=%s\n", (float64(i) / float64(len(refs)) * 100), ref)
 			getterC <- ref
 		}
 
