@@ -178,7 +178,7 @@ var durabilityChunksCmd = &cobra.Command{
 
 		start := time.Now()
 		for i, ref := range refs {
-			log.Printf("i=%d of %d\n", i, len(refs))
+			log.Printf("i=%d of %d - ref=%s\n", i, len(refs), ref)
 			getterC <- ref
 		}
 
